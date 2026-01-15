@@ -1,26 +1,28 @@
 import * as Joi from 'joi';
 
 export const schema = Joi.object({
-  port: Joi.number().integer().default(3000),
-  database: Joi.object({
-    url: Joi.string()
-      .pattern(/postgres:\/\/[a-zA-Z]/)
-      .required(),
-    port: Joi.number().integer().required(),
-  }),
-  jwt: Joi.object({
-    secret: Joi.string().required(),
-  }),
+  PORT: Joi.number().integer().default(3000),
+
+  POSTGRES_HOST: Joi.string().required(),
+  POSTGRES_PORT: Joi.number().integer().default(5432),
+  POSTGRES_USER: Joi.string().required(),
+  POSTGRES_PASSWORD: Joi.string().required(),
+  POSTGRES_DB: Joi.string().required(),
+
+  JWT_SECRET: Joi.string().required(),
 });
 
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || 3000,
+  port: parseInt(process.env.PORT ?? '3000', 10),
+
   database: {
-    url: process.env.POSTGRES_HOST,
-    port: parseInt(process.env.POSTGRES_PORT, 10) || 5432,
+    host: process.env.POSTGRES_HOST,
+    port: parseInt(process.env.POSTGRES_PORT ?? '5432', 10),
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
+    name: process.env.POSTGRES_DB,
   },
+
   jwt: {
     secret: process.env.JWT_SECRET,
     saltOrRounds: 10,
